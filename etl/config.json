@@ -1,0 +1,123 @@
+{
+  "aws_access_key_id": "",
+  "aws_secret_access_key": "",
+  "load_config": {
+    "immigration": {
+      "source_path": "../data/immigration_data_sample.csv",
+      "csv_sep": ";",
+      "dropna_cols": null,
+      "drop_duplicate_cols": null,
+      "drop_cols": [
+        "occup",
+        "entdepu",
+        "insnum"
+      ],
+      "to_type_cols": {
+        "cicid": "int",
+        "i94yr": "int",
+        "i94mon": "int",
+        "biryear": "int",
+        "arrdate": "int",
+        "i94res": "int"
+      }
+    },
+    "demographic": {
+      "source_path": "../data/us-cities-demographics.csv",
+      "csv_sep": ";",
+      "dropna_cols": [
+        "Male Population",
+        "Female Population",
+        "Number of Veterans",
+        "Foreign-born",
+        "Average Household Size"
+      ],
+      "drop_duplicate_cols": null,
+      "drop_cols": null,
+      "to_type_cols": null
+    },
+    "temperature": {
+      "source_path": "../data/GlobalLandTemperaturesByCity.csv",
+      "csv_sep": ";",
+      "dropna_cols": [
+        "AverageTemperature"
+      ],
+      "drop_duplicate_cols": [
+        "dt",
+        "City",
+        "Country"
+      ],
+      "drop_cols": null,
+      "to_type_cols": null
+    },
+    "airport": {
+      "source_path": "../data/airport-codes_csv.csv",
+      "csv_sep": ",",
+      "dropna_cols": null,
+      "drop_duplicate_cols": [
+        "iata_code"
+      ],
+      "drop_cols": null,
+      "to_type_cols": null
+    },
+    "codes": {
+      "source_path": "../data/SAS_I94_country_codes.csv",
+      "csv_sep": ";",
+      "dropna_cols": null,
+      "drop_duplicate_cols": null,
+      "drop_cols": null,
+      "to_type_cols": {
+        "code": "int"
+      }
+    }
+  },
+  "schema_config": {
+    "dim_date_pk": "arrival_date",
+    "dim_country_pk": "country_code",
+    "dim_airport_pk": "arrival_port",
+    "dim_demo_pk": "state_code",
+    "fact_immigration": {
+      "rename_dim_pks": {
+        "arrdate": "arrival_date",
+        "i94res": "country_code",
+        "i94port": "arrival_port",
+        "i94addr": "state_code"
+      },
+      "date_cols": [
+        "arrdate",
+        "depdate"
+      ]
+    }
+  },
+  "parquet_config": {
+    "dim_date": {
+      "path": "../output_data",
+      "name": "DIM_arrival_date",
+      "partition_cols": [
+        "year",
+        "month"
+      ]
+    },
+    "dim_country": {
+      "path": "../output_data",
+      "name": "DIM_origin_country",
+      "partition_cols": []
+    },
+    "dim_airport": {
+      "path": "../output_data",
+      "name": "DIM_arrival_airport",
+      "partition_cols": []
+    },
+    "dim_demographic": {
+      "path": "../output_data",
+      "name": "DIM_demographics",
+      "partition_cols": []
+    },
+    "fact_immigration": {
+      "path": "../output_data",
+      "name": "FACT_immigration",
+      "partition_cols": [
+        "state_code"
+      ]
+    }
+  }
+}
